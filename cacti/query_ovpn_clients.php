@@ -4,8 +4,6 @@ require('../OpenVpnApi.php');
 
 $hostname = $_SERVER['argv'][1];
 $command = $_SERVER['argv'][2];
-$query = @$_SERVER['argv'][3];
-$index = @$_SERVER['argv'][4];
 
 include('../config.php');
 
@@ -29,6 +27,9 @@ if($command == 'index' || $command == 'query') {
 }
 
 if($command == 'get') {
+	$index = $_SERVER['argv'][4];
+	$query = $_SERVER['argv'][3];
+
 	$client = $ovpn->clientData($index);
 
 	switch($query) {
