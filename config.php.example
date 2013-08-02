@@ -1,5 +1,11 @@
 <?php
-$hostname = '';
-$port = '';
-$password = '';
+$hostname = isset($hostname) ? $hostname : '';
+
+switch($hostname) {
+	default:
+		$port = '';
+		$password = '';
+
+		return;
+}
 ?>

@@ -1,14 +1,19 @@
 <?php
+chdir(realpath(dirname(__FILE__)));
 require('../OpenVpnApi.php');
 
 $hostname = $_SERVER['argv'][1];
-$port = $_SERVER['argv'][2];
-$password = $_SERVER['argv'][3];
-$command = $_SERVER['argv'][4];
-$query = @$_SERVER['argv'][5];
-$index = @$_SERVER['argv'][6];
+$command = $_SERVER['argv'][2];
+$query = @$_SERVER['argv'][3];
+$index = @$_SERVER['argv'][4];
+
+include('../config.php');
 
 $ovpn = new OpenVpnApi($hostname, $port, $password);
+
+if($command == 'num_indexes') {
+	echo count($clients = $ovpn->connectedClients()) . "\n";
+}
 
 if($command == 'index' || $command == 'query') {
 	$clients = $ovpn->connectedClients();
@@ -24,16 +29,20 @@ if($command == 'index' || $command == 'query') {
 }
 
 if($command == 'get') {
-	if($query == 'bytesRx') {
-		$client = $ovpn->clientData($index);
+	$client = $ovpn->clientData($index);
 
-		echo $client['bytes_rx'] . "\n";
-	}
+	switch($query) {
+		case 'index':
+			echo $client['cn'] . "\n";
+			return;
 
-	if($query == 'bytesTx') {
-		$client = $ovpn->clientData($index);
+		case 'bytesRx':
+			echo $client['bytes_rx'] . "\n";
+			return;
 
-		echo $client['bytes_tx'] . "\n";
+		case 'bytesTx':
+			echo $client['bytes_tx'] . "\n";
+			return;
 	}
 }
 ?>
