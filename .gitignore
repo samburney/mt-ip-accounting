@@ -1,1 +1,5 @@
 config.php
+vendor/*
+composer.lock
+model/*
+!model/.gitkeep
