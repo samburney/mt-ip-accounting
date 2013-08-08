@@ -1,11 +1,22 @@
 <?php
+// OpenVPN Management Interface
 $hostname = isset($hostname) ? $hostname : '';
-
 switch($hostname) {
 	default:
 		$port = '';
 		$password = '';
 
-		return;
+		break;
 }
+
+// SQL Database (Only MySQL has been tested, but SQlite should work fine)
+$db_driver = 'mysql';
+$db_host = '';
+$db_db = '';
+$db_user = '';
+$db_pass = '';
+$db_prefix = '';
+
+// MikroTik Routers with IP Accounting enabled
+$routers[]['hostname'] = '';
 ?>
