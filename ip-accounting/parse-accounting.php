@@ -5,21 +5,23 @@ require('vendor/autoload.php');
 require('config.php');
 
 // OpenVPN Management API
-require('OpenVpnApi.php');
-$ovpn = new OpenVpnApi($hostname, $port, $password);
+if(isset($hostname)){
+	require('OpenVpnApi.php');
+	$ovpn = new OpenVpnApi($hostname, $port, $password);
+
+	// OpenVPN User Data
+	$ovpn_users = $ovpn->connectedClientsData();
+	$ovpn_ips = array();
+	foreach($ovpn_users as $ovpn_user) {
+		$username = User::where('cn', '=', $ovpn_user['cn'])->first();
+		$ovpn_user['username'] = $username ? $username['name'] : $ovpn_user['cn'];
+
+		$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
+	}
+}
 
 // Database
 require('db_setup.php');
-
-// OpenVPN User Data
-$ovpn_users = $ovpn->connectedClientsData();
-$ovpn_ips = array();
-foreach($ovpn_users as $ovpn_user) {
-	$username = User::where('cn', '=', $ovpn_user['cn'])->first();
-	$ovpn_user['username'] = $username ? $username['name'] : $ovpn_user['cn'];
-
-	$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
-}
 
 // Fetch current accounting pairs into an array
 foreach($routers as $router) {
