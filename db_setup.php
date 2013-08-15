@@ -3,7 +3,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 $db = new DB;
 
-$db->addConnection([
+$db->addConnection(Array(
     'driver'    => $db_driver,
     'host'      => $db_host,
     'database'  => $db_db,
@@ -12,7 +12,7 @@ $db->addConnection([
     'charset'   => 'utf8',
     'collation' => 'utf8_unicode_ci',
     'prefix'    => $db_prefix,
-]);
+));
 
 // Set the event dispatcher used by Eloquent models... (optional)
 use Illuminate\Events\Dispatcher;
