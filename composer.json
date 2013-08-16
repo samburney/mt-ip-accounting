@@ -7,10 +7,17 @@
             "email": "sam.burney@air-stream.org"
         }
     ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://composer.sifnt.wan"
+        }
+    ],
     "require": {
         "php": ">=5.3.0",
         "illuminate/database": "4.0.0",
-        "illuminate/cache": "4.0.0"
+        "illuminate/cache": "4.0.0",
+        "sifnt/sifnt-util": "dev-master"
     },
     "autoload": {
         "classmap": [

@@ -54,20 +54,18 @@ foreach($routers as $router) {
 	}
 }
 
-
 // Generate current aggregated download and upload lists
-$users_downloaded = RawHour::where('date', '=', $date)->where('src_user_name', '!=', '')
-	->groupBy('src_user_name')
-	->select('users.id', 'src_user_name as user_name', 'src_addr as ipaddr', $db->connection()->raw('sum(bytes) as downloaded'))
-	->leftJoin('users', 'src_user_name', '=', 'users.name')
+$users_downloaded = RawHour::where('date', '=', $date)->where('dst_user_name', '!=', '')
+	->groupBy('dst_user_name')
+	->select('users.id', 'dst_user_name as user_name', 'dst_addr as ipaddr', $db->connection()->raw('sum(bytes) as downloaded'))
+	->leftJoin('users', 'dst_user_name', '=', 'users.name')
 	->get()
 	->toArray();
 
-
-$users_uploaded = RawHour::where('date', '=', $date)->where('dst_user_name', '!=', '')
-	->groupBy('dst_user_name')
-	->select('users.id', 'dst_user_name as user_name', 'dst_addr as ipaddr', $db->connection()->raw('sum(bytes) as uploaded'))
-	->leftJoin('users', 'dst_user_name', '=', 'users.name')
+$users_uploaded = RawHour::where('date', '=', $date)->where('src_user_name', '!=', '')
+	->groupBy('src_user_name')
+	->select('users.id', 'src_user_name as user_name', 'src_addr as ipaddr', $db->connection()->raw('sum(bytes) as uploaded'))
+	->leftJoin('users', 'src_user_name', '=', 'users.name')
 	->get()
 	->toArray();
 
