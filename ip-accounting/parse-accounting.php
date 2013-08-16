@@ -4,8 +4,11 @@ chdir(realpath(dirname(__FILE__)) . '/..');
 require('vendor/autoload.php');
 require('config.php');
 
+// Database
+require('db_setup.php');
+
 // OpenVPN Management API
-if(isset($hostname)){
+if(isset($hostname) && $hostname != ''){
 	require('OpenVpnApi.php');
 	$ovpn = new OpenVpnApi($hostname, $port, $password);
 
@@ -19,9 +22,6 @@ if(isset($hostname)){
 		$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
 	}
 }
-
-// Database
-require('db_setup.php');
 
 // Fetch current accounting pairs into an array
 foreach($routers as $router) {
