@@ -1,6 +1,6 @@
 {
-    "name": "sifnt/php-openvpn-api",
-    "description": "OpenVPN Management API Binding for PHP",
+    "name": "sifnt/mt-ip-accounting",
+    "description": "MikroTik IP Accounting Collector",
     "authors": [
         {
             "name": "Sam Burney",
@@ -17,14 +17,12 @@
         "php": ">=5.3.0",
         "illuminate/database": "4.0.0",
         "illuminate/cache": "4.0.0",
-        "sifnt/sifnt-util": "dev-master"
+        "sifnt/sifnt-util": "dev-master",
+        "sifnt/php-openvpn-api": "dev-master"
     },
     "autoload": {
         "classmap": [
-	       "model/"
-        ],
-        "files": [
-            "OpenVpnApi.php"
+	       "models/"
         ]
     },
     "minimum-stability": "dev"

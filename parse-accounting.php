@@ -1,5 +1,5 @@
 <?php
-chdir(realpath(dirname(__FILE__)) . '/..');
+chdir(realpath(dirname(__FILE__)));
 
 require('vendor/autoload.php');
 require('config.php');
@@ -8,18 +8,20 @@ require('config.php');
 require('db_setup.php');
 
 // OpenVPN Management API
-if(isset($hostname) && $hostname != ''){
-	require('OpenVpnApi.php');
-	$ovpn = new OpenVpnApi($hostname, $port, $password);
-
-	// OpenVPN User Data
-	$ovpn_users = $ovpn->connectedClientsData();
+if(isset($openvpns)){
 	$ovpn_ips = array();
-	foreach($ovpn_users as $ovpn_user) {
-		$username = User::where('cn', '=', $ovpn_user['cn'])->first();
-		$ovpn_user['username'] = $username ? $username['name'] : $ovpn_user['cn'];
 
-		$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
+	foreach($openvpns as $openvpn) {
+		$ovpn = new OpenVpnApi($openvpn['hostname'], $openvpn['port'], $openvpn['password']);
+
+		// OpenVPN User Data
+		$ovpn_users = $ovpn->connectedClientsData();
+		foreach($ovpn_users as $ovpn_user) {
+			$username = User::where('cn', '=', $ovpn_user['cn'])->first();
+			$ovpn_user['username'] = $username ? $username['name'] : $ovpn_user['cn'];
+
+			$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
+		}
 	}
 }
 
@@ -34,7 +36,7 @@ foreach($routers as $router) {
 
 		$raw_src_user = isset($ovpn_ips[$line[0]]) ? $ovpn_ips[$line[0]]['username'] : ($line[4] !== '*' ? $line[4] : NULL);
 		$raw_dst_user = isset($ovpn_ips[$line[1]]) ? $ovpn_ips[$line[1]]['username'] : (trim($line[5]) !== '*' ? trim($line[5]) : NULL);
-		
+
 		if(isset($raw_src_user) || isset($raw_dst_user)) {
 			$raw_hourly = array(
 				'date' => $date,
