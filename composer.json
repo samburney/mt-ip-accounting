@@ -22,6 +22,9 @@
     "autoload": {
         "classmap": [
 	       "model/"
+        ],
+        "files": [
+            "OpenVpnApi.php"
         ]
     },
     "minimum-stability": "dev"
