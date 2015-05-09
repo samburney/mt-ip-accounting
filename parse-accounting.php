@@ -8,7 +8,7 @@ require('config.php');
 require('db_setup.php');
 
 // OpenVPN Management API
-if(isset($openvpns)){
+if(isset($openvpns) && @is_array($openvpns)) {
 	$ovpn_ips = array();
 
 	foreach($openvpns as $openvpn) {
@@ -22,6 +22,16 @@ if(isset($openvpns)){
 
 			$ovpn_ips[$ovpn_user['ip_vpn']] = $ovpn_user;
 		}
+	}
+}
+
+// Handle manual IP mappings
+if(isset($manual_ips) && @is_array($manual_ips)) {
+	if(isset($ovpn_ips) && @is_array($ovpn_ips)) {
+		$ovpn_ips = array_merge($ovpn_ips, $manual_ips);
+	}
+	else {
+		$ovpn_ips = $manual_ips;
 	}
 }
 
