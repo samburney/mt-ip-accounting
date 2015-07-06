@@ -1,6 +1,10 @@
 <?php
 // MikroTik Routers with IP Accounting enabled
-$routers[]['hostname'] = '';
+$routers[] = array(
+	'hostname' => '',
+	'username' => '', // Optional
+	'password' => '', // Optional
+);
 
 // SQL Database (Only MySQL has been tested, but SQlite should work fine)
 $db_driver = 'mysql';
@@ -16,3 +20,23 @@ $db_prefix = '';
 	port => 0,
 	password => '',
 );*/
+
+// Manually Add IP Address / User Mappings
+//$manual_ips['0.0.0.0'] = array('username' => 'example');
+
+// Example to use RouterOS to generate a list of $manual_ips from DHCP
+/*use PEAR2\Net\RouterOS;
+foreach($routers as $router) {
+	$rapi = new RouterOS\Util($rcli = new RouterOS\Client($router['hostname'], $router['username'], $router['password']));
+
+	$query = RouterOS\Query::where('active-server', 'server1'); // Set DHCP server name here
+	$request = new RouterOS\Request('/ip/dhcp-server/lease/print');
+	$request->setQuery($query);
+
+	$leases = $rcli->sendSync($request);
+	foreach($leases as $lease) {
+		if($lease->getType() != '!done') {
+			$manual_ips[$lease->getProperty('address')] = array('username' => $lease->getProperty('host-name'));
+		}
+	}
+}*/
