@@ -10,7 +10,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "http://composer.sifnt.wan"
+            "url": "http://composer.sifnt.net.au"
         }
     ],
     "require": {
