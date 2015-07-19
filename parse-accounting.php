@@ -3,6 +3,7 @@ chdir(realpath(dirname(__FILE__)));
 
 require('vendor/autoload.php');
 require('config.php');
+require('functions.php');
 
 // Database
 require('db_setup.php');
@@ -33,6 +34,17 @@ if(isset($manual_ips) && @is_array($manual_ips)) {
 	else {
 		$ovpn_ips = $manual_ips;
 	}
+
+	// Check for subnets
+	$user_subnets = [];
+	foreach($manual_ips as $key => $value) {
+		if(preg_match("/\/[0-9]{1,2}$/", $key, $matches)) {
+			$user_subnets[] = array(
+				"subnet" => $key,
+				"userdata" => $value,
+			);
+		}
+	}
 }
 
 // Fetch current accounting pairs into an array
@@ -46,6 +58,22 @@ foreach($routers as $router) {
 
 		$raw_src_user = isset($ovpn_ips[$line[0]]) ? $ovpn_ips[$line[0]]['username'] : ($line[4] !== '*' ? $line[4] : NULL);
 		$raw_dst_user = isset($ovpn_ips[$line[1]]) ? $ovpn_ips[$line[1]]['username'] : (trim($line[5]) !== '*' ? trim($line[5]) : NULL);
+
+		// If $user_subnets are defined, match all remaining IPs against them
+		if(sizeof($user_subnets) > 0) {
+			if(!$raw_src_user) {
+				if($userdata = get_subnet_user($line[0], $user_subnets)) {
+					$ovpn_ips[$line[0]] = $userdata;
+					$raw_src_user = $userdata['username'];
+				}
+			}
+			if(!$raw_dst_user) {
+				if($userdata = get_subnet_user($line[1], $user_subnets)) {
+					$ovpn_ips[$line[1]] = $userdata;
+					$raw_src_user = $userdata['username'];
+				}
+			}
+		}
 
 		if(isset($raw_src_user) || isset($raw_dst_user)) {
 			$raw_hourly = array(
