@@ -9,10 +9,10 @@ function get_subnet_user($ip, $user_subnets)
     if(ip_in_network($ip, $subnet_addr, $subnet_cidr)) {
       return($subnet['userdata']);
     }
-    else {
-      return false;
-    }
   }
+
+  // No results
+  return false;
 }
 
 // Check that IP is in specified network; Source: http://php.net/manual/en/function.ip2long.php#92544
